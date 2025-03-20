@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fancy Shmancy</title>
+    <style>
+        body {
+            background: radial-gradient(circle, #0b2342, #020b1a);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .player {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+        }
+        .album-art {
+            width: 250px;
+            height: 250px;
+            background: url('Untitled36_20250320141736.png') center/cover no-repeat;
+            border-radius: 10px;
+            margin: 0 auto 15px;
+        }
+        .controls button {
+            background: #1b9aef;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .controls button:hover {
+            background: #0d7ac1;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="player">
+        <h2>Fancy Shmancy</h2>
+        <div class="album-art"></div>
+        <audio id="audio" src="Fancy-Shmancy.mp3" preload="auto"></audio>
+        <input type="range" id="progress" value="0" min="0" max="100">
+        <div class="controls">
+            <button id="playPause">▶</button>
+        </div>
+    </div>
+    
+    <script>
+        const audio = document.getElementById('audio');
+        const playPause = document.getElementById('playPause');
+        const progress = document.getElementById('progress');
+
+        playPause.addEventListener('click', () => {
+            if (audio.paused || audio.ended) {
+                audio.play().catch(error => console.error('Error playing audio:', error));
+                playPause.innerText = '⏸';
+            } else {
+                audio.pause();
+                playPause.innerText = '▶';
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (!isNaN(audio.duration)) {
+                progress.value = (audio.currentTime / audio.duration) * 100;
+            }
+        });
+
+        progress.addEventListener('input', () => {
+            if (!isNaN(audio.duration)) {
+                audio.currentTime = (progress.value / 100) * audio.duration;
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            playPause.innerText = '▶'; // Reset button when song ends
+        });
+    </script>
+</body>
+</html>
